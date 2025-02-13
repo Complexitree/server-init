@@ -22,6 +22,7 @@ if [ -d "$CERT_PATH" ]; then
     echo "✅ Zertifikat für $DOMAIN existiert bereits. Überspringe Anforderung."
 else
     echo "📜 Fordere Let's Encrypt Zertifikat an..."
+    mkdir -p /var/www/certbot
     certbot certonly --webroot -w /var/www/certbot -d $DOMAIN --email $EMAIL --agree-tos --no-eff-email --force-renewal
 fi
 
