@@ -57,15 +57,15 @@ sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx.conf
 sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" scripts/init-letsencrypt.sh
 sed -i "s/MY_KEY_PLACEHOLDER/$MY_KEY/g" docker-compose.yml
 
-# 🔹 6. Docker-Compose starten
-echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
-docker compose up -d
-sleep 10  # Warte auf vollständigen Start
-
-# 🔹 7. SSL-Zertifikat beantragen
+# 🔹 6. SSL-Zertifikat beantragen
 echo -e "${GREEN}🔒 Erstelle Let's Encrypt Zertifikat...${NC}"
 chmod +x scripts/init-letsencrypt.sh
 scripts/init-letsencrypt.sh
+
+# 🔹 7. Docker-Compose starten
+echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
+docker compose up -d
+sleep 10  # Warte auf vollständigen Start
 
 # 🔹 8. Falls automatische Updates aktiviert wurden, Cronjob einrichten
 if [[ "$AUTO_UPDATE" == "y" ]]; then
