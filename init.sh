@@ -22,7 +22,8 @@ read -p "🔄 Sollen die Docker-Container automatisch täglich aktualisiert werd
 # 🔹 3. Installiere Docker & Certbot
 echo -e "${GREEN}📦 Installiere Docker, Docker Compose & Certbot...${NC}"
 apt-get update
-apt-get install -y docker.io docker-compose certbot
+snap install docker
+apt-get install -y certbot
 
 # 🔹 4. Repository mit den Konfigurationsdateien herunterladen
 echo -e "${GREEN}📥 Lade Konfigurationsdateien von GitHub...${NC}"
