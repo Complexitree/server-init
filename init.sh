@@ -26,7 +26,7 @@ apt-get install -y docker.io docker-compose certbot
 
 # 🔹 4. Repository mit den Konfigurationsdateien herunterladen
 echo -e "${GREEN}📥 Lade Konfigurationsdateien von GitHub...${NC}"
-git clone https://github.com/Complexitree/server-init/docker-setup.git /opt/docker-setup
+git clone https://github.com/Complexitree/server-init.git /opt/docker-setup
 
 # 🔹 5. Ersetze Platzhalter in `docker-compose.yml`
 cd /opt/docker-setup
