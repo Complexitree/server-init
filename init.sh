@@ -63,6 +63,7 @@ sleep 10  # Warte auf vollständigen Start
 
 # 🔹 7. SSL-Zertifikat beantragen
 echo -e "${GREEN}🔒 Erstelle Let's Encrypt Zertifikat...${NC}"
+chmod +x scripts/init-letsencrypt.sh
 scripts/init-letsencrypt.sh
 
 # 🔹 8. Falls automatische Updates aktiviert wurden, Cronjob einrichten
