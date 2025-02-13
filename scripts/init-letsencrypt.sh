@@ -15,7 +15,7 @@ chmod -R 755 /var/www/certbot
 # 🔹 Starte einen temporären Webserver für die Zertifikatsanfrage
 echo "🌍 Starte temporären Nginx für ACME-Challenge..."
 docker run -d --name certbot-nginx -p 80:80 \
-  -v /var/www/certbot:/usr/share/nginx/html \
+  -v /var/www/certbot:/var/www/certbot \
   nginx:alpine
 
 # Warte kurz, damit Nginx startet
