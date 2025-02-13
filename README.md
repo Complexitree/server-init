@@ -5,7 +5,7 @@ The repository contains the init-script to setup a new Complexitree-Server. Foll
 # Install on a clean linux server
 
 ```bash
-wget -O init.sh [https://raw.githubusercontent.com/Complexitree/server-init/init.sh](https://raw.githubusercontent.com/Complexitree/server-init/refs/heads/main/init.sh)
+wget -O init.sh https://raw.githubusercontent.com/Complexitree/server-init/refs/heads/main/init.sh
 chmod +x init.sh
 sudo ./init.sh
 ```
