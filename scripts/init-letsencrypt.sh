@@ -8,14 +8,10 @@ CERT_PATH="/etc/letsencrypt/live/$DOMAIN"
 
 echo "🔐 Erstelle Let's Encrypt Zertifikat für $DOMAIN..."
 
-# 🔹 Stelle sicher, dass das Verzeichnis für die Zertifikatsanfrage existiert
-mkdir -p /var/www/certbot/.well-known/acme-challenge
-chmod -R 755 /var/www/certbot
-
 # 🔹 Starte einen temporären Webserver für die Zertifikatsanfrage
 echo "🌍 Starte temporären Nginx für ACME-Challenge..."
 docker run -d --name certbot-nginx -p 80:80 \
-  -v /var/www/certbot:/var/www/certbot \
+  -v certbot-www:/var/www/certbot \
   nginx:alpine
 
 # Warte kurz, damit Nginx startet
