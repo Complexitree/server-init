@@ -45,7 +45,8 @@ sed -i "s/MY_KEY_PLACEHOLDER/$MY_KEY/g" docker-compose.yml
 
 # 🔹 6. Docker-Compose starten
 echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
-docker-compose up -d
+cd /opt/docker-setup
+docker compose up -d
 sleep 10  # Warte auf vollständigen Start
 
 # 🔹 7. SSL-Zertifikat beantragen
