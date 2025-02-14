@@ -22,14 +22,14 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./letsencrypt:/etc/letsencrypt:ro  # Nur Lesezugriff für Sicherheit
+      - /etc/letsencrypt:/etc/letsencrypt:ro  # Nur Lesezugriff für Sicherheit
       - certbot-www:/var/www/certbot
       - ./nginx.conf:/etc/nginx/nginx.conf
 
   certbot-renew:
     image: certbot/certbot
     volumes:
-      - ./letsencrypt:/etc/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - certbot-www:/var/www/certbot
     entrypoint: /bin/sh -c "while true; do certbot renew --webroot -w /var/www/certbot && chown -R root:www-data /etc/letsencrypt && chmod -R 750 /etc/letsencrypt && docker-compose exec nginx nginx -s reload && sleep 12h; done"
 
