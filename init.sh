@@ -5,6 +5,11 @@ set -e  # Beendet das Skript bei Fehlern
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+echo -e "${GREEN}Willkommen zum Complexitree-Server Setup${NC}"
+echo -e "Dieses Skript installiert und konfiguriert die notwendigen Komponenten, einschließlich Docker, Zertifikatsverwaltung und Server-Setup."
+echo -e "Bitte stellen Sie sicher, dass die eingegebene(n) Domain(s) bereits im DNS auf diesen Server zeigen, bevor Sie fortfahren.${NC}"
+echo ""
+
 echo -e "${GREEN}🚀 Setup für Complexitree-Server${NC}"
 
 # 🔹 1. Root-Rechte prüfen
