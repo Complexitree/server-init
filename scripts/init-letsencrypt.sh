@@ -14,6 +14,10 @@ if [ -d "$CERT_PATH" ]; then
 else
     echo "📜 Fordere Let's Encrypt Zertifikat an..."
     certbot certonly --standalone -d "$DOMAIN" --email "$EMAIL" --agree-tos --no-eff-email --force-renewal
+    
+    echo "🔧 Setze Berechtigungen für Nginx..."
+    chown -R root:www-data /etc/letsencrypt
+    chmod -R 750 /etc/letsencrypt
 fi
 
 echo "✅ SSL-Zertifikat wurde erfolgreich eingerichtet."
