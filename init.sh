@@ -16,7 +16,29 @@ fi
 # 🔹 2. Abfrage von Domain & Umgebungsvariablen
 read -p "🌍 Unter welcher Domain soll der Server erreichbar sein (mehrere Domains mit Leerzeichen getrennt): " DOMAIN
 read -p "💎 Welche E-Mailadresse soll für Let's Encrypt verwendet werden: " EMAIL
-read -p "🔑 Wert für Umgebungsvariable MY_KEY: " MY_KEY
+
+echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
+read XTREE_KEY_STORE_ACCESS_GRANT
+
+echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_BUCKET ein (Standard: keys):${NC}"
+read XTREE_KEY_STORE_BUCKET
+XTREE_KEY_STORE_BUCKET=${XTREE_KEY_STORE_BUCKET:-keys}
+
+echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT ein:${NC}"
+read XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT
+
+echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_BUCKET ein (Standard: publishcontext):${NC}"
+read XTREE_PUBLISH_CONTEXT_STORE_BUCKET
+XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publishcontext}
+
+echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
+read XTREE_OPENAI_API_KEY
+
+echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_ACCESSGRANT:${NC}"
+read XTREE_TEMP_ACCESSGRANT
+echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
+read XTREE_TEMP_KEYHASH
+
 read -p "🔄 Sollen die Docker-Container automatisch täglich aktualisiert werden? (y/n): " AUTO_UPDATE
 
 # 🔹 3. Installiere Docker & Certbot
@@ -55,7 +77,11 @@ sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" docker-compose.yml
 sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" scripts/init-letsencrypt.sh
 sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx.conf
 sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" scripts/init-letsencrypt.sh
-sed -i "s/MY_KEY_PLACEHOLDER/$MY_KEY/g" docker-compose.yml
+sed -i "s/XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_KEY_STORE_ACCESS_GRANT/g" docker-compose.yml
+sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-compose.yml
+sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT/g" docker-compose.yml
+sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_BUCKET/g" docker-compose.yml
+sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.yml
 
 # 🔹 6. SSL-Zertifikat beantragen
 echo -e "${GREEN}🔒 Erstelle Let's Encrypt Zertifikat...${NC}"
@@ -70,7 +96,6 @@ sleep 10  # Warte auf vollständigen Start
 # 🔹 8. Falls automatische Updates aktiviert wurden, Cronjob einrichten
 if [[ "$AUTO_UPDATE" == "y" ]]; then
     echo -e "${GREEN}📅 Richte tägliche automatische Updates ein...${NC}"
-
     cat <<EOF > /opt/docker-setup/update-containers.sh
 #!/bin/bash
 echo "🔄 Starte Update-Prozess: \$(date)" >> /var/log/docker-update.log
