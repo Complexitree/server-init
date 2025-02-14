@@ -81,8 +81,12 @@ docker image prune -f >> /var/log/docker-update.log 2>&1
 echo "📅 Update abgeschlossen: \$(date)" >> /var/log/docker-update.log
 EOF
 
-    chmod +x /opt/docker-setup/update-containers.sh
-    (crontab -l 2>/dev/null; echo "0 3 * * * /opt/docker-setup/update-containers.sh") | crontab -
+     # Cronjob sicher hinzufügen
+    crontab -l > /tmp/mycron 2>/dev/null || true  # Falls keine Crontab existiert, wird eine neue erstellt
+    echo "0 3 * * * /opt/docker-setup/update-containers.sh" >> /tmp/mycron
+    crontab /tmp/mycron
+    rm /tmp/mycron
+    
     echo -e "${GREEN}✅ Automatische Updates sind jetzt aktiv.${NC}"
 else
     echo -e "${GREEN}❌ Automatische Updates wurden deaktiviert.${NC}"
