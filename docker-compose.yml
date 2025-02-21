@@ -9,7 +9,7 @@ services:
       - "3000:3000"
 
   complexitree:
-    image: topperdel/complexitree-server
+    image: complexitree/server
     container_name: complexitree-server
     restart: unless-stopped
     environment:
