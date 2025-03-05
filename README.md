@@ -18,6 +18,12 @@ If selected in the setup the server updates the docker containers automatically.
 journalctl -t docker-update
 ```
 
+You may update the server manually by this command:
+
+```bash
+bash /opt/docker-setup/update-containers.sh
+```
+
 ## Version-Info
 
 You may get info about the current server version by opening the following URL in the browser:
