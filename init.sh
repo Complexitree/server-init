@@ -37,9 +37,9 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # 🔹 2. Abfrage von Domain & Umgebungsvariablen
-read -e "${GREEN}🌍 Unter welcher Domain soll der Server erreichbar sein (mehrere Domains mit Leerzeichen getrennt):${NC}"
+echo -e "${GREEN}🌍 Unter welcher Domain soll der Server erreichbar sein (mehrere Domains mit Leerzeichen getrennt):${NC}"
 read DOMAIN
-read -e "${GREEN}💎 Welche E-Mailadresse soll für Let's Encrypt verwendet werden:${NC}"
+echo -e "${GREEN}💎 Welche E-Mailadresse soll für Let's Encrypt verwendet werden:${NC}"
 read EMAIL
 
 echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
@@ -64,7 +64,7 @@ read XTREE_TEMP_ACCESSGRANT
 echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
 read XTREE_TEMP_KEYHASH
 
-read -e "${GREEN}🔄 Sollen die Docker-Container automatisch täglich aktualisiert werden? (y/n):{NC}"
+echo -e "${GREEN}🔄 Sollen die Docker-Container automatisch täglich aktualisiert werden? (y/n):{NC}"
 read AUTO_UPDATE
 
 # 🔹 3. Installiere Docker & Certbot
