@@ -96,7 +96,6 @@ fi
 
 # 🔹 5. Ersetze Platzhalter in `docker-compose.yml` und `init-letsencrypt.sh`
 cd /opt/docker-setup
-sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" docker-compose.yml
 sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" scripts/init-letsencrypt.sh
 sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx.conf
 sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" scripts/init-letsencrypt.sh
