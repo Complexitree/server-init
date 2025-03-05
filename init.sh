@@ -119,25 +119,40 @@ sleep 10  # Warte auf vollständigen Start
 # 🔹 8. Falls automatische Updates aktiviert wurden, Cronjob einrichten
 if [[ "$AUTO_UPDATE" == "y" ]]; then
     echo -e "${GREEN}📅 Richte tägliche automatische Updates ein...${NC}"
+    
     cat <<EOF > /opt/docker-setup/update-containers.sh
 #!/bin/bash
-echo "🔄 Starte Update-Prozess: \$(date)" >> /var/log/docker-update.log
-cd /opt/docker-setup
-docker compose pull >> /var/log/docker-update.log 2>&1
-docker compose up -d --remove-orphans >> /var/log/docker-update.log 2>&1
-docker image prune -f >> /var/log/docker-update.log 2>&1
-echo "📅 Update abgeschlossen: \$(date)" >> /var/log/docker-update.log
+
+LOG_FILE="/var/log/docker-update.log"
+LOCK_FILE="/tmp/docker-update.lock"
+
+# Verwende flock, um parallele Ausführungen zu verhindern
+{
+    echo "🔄 Starte Update-Prozess: \$(date)" | tee -a "\$LOG_FILE" | logger -t docker-update
+    cd /opt/docker-setup || { echo "❌ Fehler: Verzeichnis nicht gefunden!" | tee -a "\$LOG_FILE" | logger -t docker-update; exit 1; }
+
+    docker compose pull | tee -a "\$LOG_FILE" | logger -t docker-update
+    docker compose up -d --remove-orphans | tee -a "\$LOG_FILE" | logger -t docker-update
+    docker image prune -f | tee -a "\$LOG_FILE" | logger -t docker-update
+
+    echo "✅ Update abgeschlossen: \$(date)" | tee -a "\$LOG_FILE" | logger -t docker-update
+} 2>&1 | tee -a "\$LOG_FILE" | logger -t docker-update
+
 EOF
 
-     # Cronjob sicher hinzufügen
+    # Mach die Datei ausführbar
+    chmod +x /opt/docker-setup/update-containers.sh
+
+    # Cronjob sicher hinzufügen
     crontab -l > /tmp/mycron 2>/dev/null || true  # Falls keine Crontab existiert, wird eine neue erstellt
-    echo "0 3 * * * /opt/docker-setup/update-containers.sh" >> /tmp/mycron
+    echo "0 3 * * * flock -n /tmp/docker-update.lock /opt/docker-setup/update-containers.sh" >> /tmp/mycron
     crontab /tmp/mycron
     rm /tmp/mycron
-    
+
     echo -e "${GREEN}✅ Automatische Updates sind jetzt aktiv.${NC}"
 else
     echo -e "${GREEN}❌ Automatische Updates wurden deaktiviert.${NC}"
 fi
+
 
 echo -e "${GREEN}✅ Setup abgeschlossen! Der Complexitree-Server läuft nun unter: https://$DOMAIN ${NC}"
