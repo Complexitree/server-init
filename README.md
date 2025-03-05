@@ -9,3 +9,19 @@ wget -O init.sh https://raw.githubusercontent.com/Complexitree/server-init/refs/
 chmod +x init.sh
 sudo ./init.sh
 ```
+
+## Updating the server
+
+If selected in the setup the server updates the docker containers automatically. You may see update-information with this command:
+
+```bash
+journalctl -t docker-update
+```
+
+## Version-Info
+
+You may get info about the current server version by opening the following URL in the browser:
+
+``
+htps://[server]/version
+``
