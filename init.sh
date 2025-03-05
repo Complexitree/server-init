@@ -98,8 +98,8 @@ fi
 cd /opt/docker-setup
 MAIN_DOMAIN_PLACEHOLDER="$(echo $DOMAIN | awk '{print $1}')"
 sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" scripts/init-letsencrypt.sh
-sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx.conf
 sed -i "s/MAIN_DOMAIN_PLACEHOLDER/$MAIN_DOMAIN_PLACEHOLDER/g" nginx.conf
+sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx.conf
 sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" scripts/init-letsencrypt.sh
 sed -i "s/XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_KEY_STORE_ACCESS_GRANT/g" docker-compose.yml
 sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-compose.yml
