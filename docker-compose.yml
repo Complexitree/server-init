@@ -5,8 +5,6 @@ services:
     image: gotenberg/gotenberg:8.15.3
     container_name: gotenberg
     restart: unless-stopped
-    ports:
-      - "3000:3000"
 
   complexitree:
     image: complexitree/server
