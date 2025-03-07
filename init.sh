@@ -57,6 +57,12 @@ XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publish
 echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
 read XTREE_OPENAI_API_KEY
 
+echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
+read ENTERA_CLIENT_ID
+
+echo -e "${GREEN}🔑 Bitte geben Sie das Entera Client-Secret ein:${NC}"
+read ENTERA_CLIENT_SECRET
+
 echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_ACCESSGRANT:${NC}"
 read XTREE_TEMP_ACCESSGRANT
 echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
@@ -107,6 +113,8 @@ sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-c
 sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT/g" docker-compose.yml
 sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_BUCKET/g" docker-compose.yml
 sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.yml
+sed -i "s/ENTERA_CLIENT_ID_PLACEHOLDER/$ENTERA_CLIENT_ID/g" docker-compose.yml
+sed -i "s/ENTERA_CLIENT_SECRET_PLACEHOLDER/$ENTERA_CLIENT_SECRET/g" docker-compose.yml
 
 # 🔹 6. SSL-Zertifikat beantragen
 echo -e "${GREEN}🔒 Erstelle Let's Encrypt Zertifikat...${NC}"
