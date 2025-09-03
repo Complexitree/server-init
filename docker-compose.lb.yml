@@ -1,6 +1,6 @@
 services:
   gotenberg:
-    image: gotenberg/gotenberg:8.15.3
+    image: gotenberg/gotenberg:8
     container_name: gotenberg
     restart: unless-stopped
 
@@ -21,12 +21,3 @@ services:
       - ENTERA_CLIENT_SECRET=ENTERA_CLIENT_SECRET_PLACEHOLDER
     ports:
       - "8080:8080"
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx-lb.conf:/etc/nginx/nginx.conf
