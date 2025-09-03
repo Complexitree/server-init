@@ -10,6 +10,14 @@ chmod +x init.sh
 sudo ./init.sh
 ```
 
+For servers behind a load balancer that terminates TLS and forwards only HTTP traffic, use the `init-lb.sh` script:
+
+```bash
+wget -O init-lb.sh https://raw.githubusercontent.com/Complexitree/server-init/refs/heads/main/init-lb.sh
+chmod +x init-lb.sh
+sudo ./init-lb.sh
+```
+
 ## Updating the server
 
 If selected in the setup the server updates the docker containers automatically. You may see update-information with this command:

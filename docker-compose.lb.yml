@@ -1,0 +1,32 @@
+services:
+  gotenberg:
+    image: gotenberg/gotenberg:8.15.3
+    container_name: gotenberg
+    restart: unless-stopped
+
+  complexitree:
+    image: complexitree/server
+    container_name: complexitree-server
+    restart: unless-stopped
+    environment:
+      - XTREE_KEY_STORE_ACCESS_GRANT=XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER
+      - XTREE_KEY_STORE_BUCKET=XTREE_KEY_STORE_BUCKET_PLACEHOLDER
+      - XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT=XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER
+      - XTREE_PUBLISH_CONTEXT_STORE_BUCKET=XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER
+      - XTREE_OPENAI_API_KEY=XTREE_OPENAI_API_KEY_PLACEHOLDER
+      - XTREE_DOCUPIPE_API_KEY=XTREE_DOCUPIPE_API_KEY_PLACEHOLDER
+      - XTREE_TEMP_ACCESSGRANT=XTREE_TEMP_ACCESSGRANT_PLACEHOLDER
+      - XTREE_TEMP_KEYHASH=XTREE_TEMP_KEYHASH_PLACEHOLDER
+      - ENTERA_CLIENT_ID=ENTERA_CLIENT_ID_PLACEHOLDER
+      - ENTERA_CLIENT_SECRET=ENTERA_CLIENT_SECRET_PLACEHOLDER
+    ports:
+      - "8080:8080"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-lb.conf:/etc/nginx/nginx.conf
