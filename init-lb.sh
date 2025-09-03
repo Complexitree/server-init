@@ -75,7 +75,7 @@ read -p "🔄 Sollen die Docker-Container automatisch täglich aktualisiert werd
 # 🔹 3. Installiere Docker
 echo -e "${GREEN}📦 Installiere Docker und Docker Compose...${NC}"
 apt-get update
-apt-get install -y ca-certificates curl gnupg
+apt-get install -y ca-certificates curl gnupg wget
 
 # GPG-Schlüssel für Docker hinzufügen
 install -m 0755 -d /etc/apt/keyrings
@@ -91,30 +91,28 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 # Docker-Dienst starten und aktivieren
 systemctl enable --now docker
 
-# 🔹 4. Repository mit den Konfigurationsdateien herunterladen
+# 🔹 4. Konfigurationsdateien herunterladen
 echo -e "${GREEN}📅 Lade Konfigurationsdateien von GitHub...${NC}"
-if [ -d "/opt/docker-setup/.git" ]; then
-    echo "🔄 Repository existiert bereits. Aktualisiere mit git pull..."
-    cd /opt/docker-setup
-    git pull
-else
-    echo "📅 Klone Repository..."
-    git clone https://github.com/Complexitree/server-init.git /opt/docker-setup
-fi
+mkdir -p /opt/docker-setup
+cd /opt/docker-setup
+echo "📄 Lade docker-compose.lb.yml..."
+wget -qO docker-compose.lb.yml https://raw.githubusercontent.com/Complexitree/server-init/main/docker-compose.lb.yml
+echo "📄 Lade nginx-lb.conf..."
+wget -qO nginx-lb.conf https://raw.githubusercontent.com/Complexitree/server-init/main/nginx-lb.conf
 
 # 🔹 5. Ersetze Platzhalter in `docker-compose.lb.yml` und `nginx-lb.conf`
 cd /opt/docker-setup
 sed -i "s|DOMAIN_PLACEHOLDER|${DOMAIN}|g" nginx-lb.conf
-sed -i "s/XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_KEY_STORE_ACCESS_GRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-compose.lb.yml
-sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_BUCKET/g" docker-compose.lb.yml
-sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.lb.yml
-sed -i "s/XTREE_DOCUPIPE_API_KEY_PLACEHOLDER/$XTREE_DOCUPIPE_API_KEY/g" docker-compose.lb.yml
-sed -i "s/ENTERA_CLIENT_ID_PLACEHOLDER/$ENTERA_CLIENT_ID/g" docker-compose.lb.yml
-sed -i "s/ENTERA_CLIENT_SECRET_PLACEHOLDER/$ENTERA_CLIENT_SECRET/g" docker-compose.lb.yml
-sed -i "s/XTREE_TEMP_ACCESSGRANT_PLACEHOLDER/$XTREE_TEMP_ACCESSGRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_TEMP_KEYHASH_PLACEHOLDER/$XTREE_TEMP_KEYHASH/g" docker-compose.lb.yml
+sed -i "s|XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER|$XTREE_KEY_STORE_ACCESS_GRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_KEY_STORE_BUCKET_PLACEHOLDER|$XTREE_KEY_STORE_BUCKET|g" docker-compose.lb.yml
+sed -i "s|XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER|$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER|$XTREE_PUBLISH_CONTEXT_STORE_BUCKET|g" docker-compose.lb.yml
+sed -i "s|XTREE_OPENAI_API_KEY_PLACEHOLDER|$XTREE_OPENAI_API_KEY|g" docker-compose.lb.yml
+sed -i "s|XTREE_DOCUPIPE_API_KEY_PLACEHOLDER|$XTREE_DOCUPIPE_API_KEY|g" docker-compose.lb.yml
+sed -i "s|ENTERA_CLIENT_ID_PLACEHOLDER|$ENTERA_CLIENT_ID|g" docker-compose.lb.yml
+sed -i "s|ENTERA_CLIENT_SECRET_PLACEHOLDER|$ENTERA_CLIENT_SECRET|g" docker-compose.lb.yml
+sed -i "s|XTREE_TEMP_ACCESSGRANT_PLACEHOLDER|$XTREE_TEMP_ACCESSGRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_TEMP_KEYHASH_PLACEHOLDER|$XTREE_TEMP_KEYHASH|g" docker-compose.lb.yml
 
 # 🔹 6. Docker-Compose starten
 echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
