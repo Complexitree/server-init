@@ -103,16 +103,16 @@ wget --retry-connrefused --tries=3 -qO nginx-lb.conf https://raw.githubuserconte
 # 🔹 5. Ersetze Platzhalter in `docker-compose.lb.yml` und `nginx-lb.conf`
 cd /opt/docker-setup
 sed -i "s|DOMAIN_PLACEHOLDER|${DOMAIN}|g" nginx-lb.conf
-sed -i "s/XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_KEY_STORE_ACCESS_GRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-compose.lb.yml
-sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_BUCKET/g" docker-compose.lb.yml
-sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.lb.yml
-sed -i "s/XTREE_DOCUPIPE_API_KEY_PLACEHOLDER/$XTREE_DOCUPIPE_API_KEY/g" docker-compose.lb.yml
-sed -i "s/ENTERA_CLIENT_ID_PLACEHOLDER/$ENTERA_CLIENT_ID/g" docker-compose.lb.yml
-sed -i "s/ENTERA_CLIENT_SECRET_PLACEHOLDER/$ENTERA_CLIENT_SECRET/g" docker-compose.lb.yml
-sed -i "s/XTREE_TEMP_ACCESSGRANT_PLACEHOLDER/$XTREE_TEMP_ACCESSGRANT/g" docker-compose.lb.yml
-sed -i "s/XTREE_TEMP_KEYHASH_PLACEHOLDER/$XTREE_TEMP_KEYHASH/g" docker-compose.lb.yml
+sed -i "s|XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER|$XTREE_KEY_STORE_ACCESS_GRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_KEY_STORE_BUCKET_PLACEHOLDER|$XTREE_KEY_STORE_BUCKET|g" docker-compose.lb.yml
+sed -i "s|XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER|$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER|$XTREE_PUBLISH_CONTEXT_STORE_BUCKET|g" docker-compose.lb.yml
+sed -i "s|XTREE_OPENAI_API_KEY_PLACEHOLDER|$XTREE_OPENAI_API_KEY|g" docker-compose.lb.yml
+sed -i "s|XTREE_DOCUPIPE_API_KEY_PLACEHOLDER|$XTREE_DOCUPIPE_API_KEY|g" docker-compose.lb.yml
+sed -i "s|ENTERA_CLIENT_ID_PLACEHOLDER|$ENTERA_CLIENT_ID|g" docker-compose.lb.yml
+sed -i "s|ENTERA_CLIENT_SECRET_PLACEHOLDER|$ENTERA_CLIENT_SECRET|g" docker-compose.lb.yml
+sed -i "s|XTREE_TEMP_ACCESSGRANT_PLACEHOLDER|$XTREE_TEMP_ACCESSGRANT|g" docker-compose.lb.yml
+sed -i "s|XTREE_TEMP_KEYHASH_PLACEHOLDER|$XTREE_TEMP_KEYHASH|g" docker-compose.lb.yml
 
 # 🔹 6. Docker-Compose starten
 echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
