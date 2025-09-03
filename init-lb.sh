@@ -56,7 +56,7 @@ XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publish
 echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
 read XTREE_OPENAI_API_KEY
 
-echo -e "${GREEN}🔑 Bitte geben Sie den Docupipe-API-Key für KI-Datenextratkion ein:${NC}"
+echo -e "${GREEN}🔑 Bitte geben Sie den Docupipe-API-Key für KI-Datenextraktion ein:${NC}"
 read XTREE_DOCUPIPE_API_KEY
 
 echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
