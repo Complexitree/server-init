@@ -96,9 +96,9 @@ echo -e "${GREEN}📅 Lade Konfigurationsdateien von GitHub...${NC}"
 mkdir -p /opt/docker-setup
 cd /opt/docker-setup
 echo "📄 Lade docker-compose.lb.yml..."
-wget -qO docker-compose.lb.yml https://raw.githubusercontent.com/Complexitree/server-init/main/docker-compose.lb.yml
+wget --retry-connrefused --tries=3 -qO docker-compose.lb.yml https://raw.githubusercontent.com/Complexitree/server-init/main/docker-compose.lb.yml || { echo "❌ Fehler beim Herunterladen von docker-compose.lb.yml"; exit 1; }
 echo "📄 Lade nginx-lb.conf..."
-wget -qO nginx-lb.conf https://raw.githubusercontent.com/Complexitree/server-init/main/nginx-lb.conf
+wget --retry-connrefused --tries=3 -qO nginx-lb.conf https://raw.githubusercontent.com/Complexitree/server-init/main/nginx-lb.conf || { echo "❌ Fehler beim Herunterladen von nginx-lb.conf"; exit 1; }
 
 # 🔹 5. Ersetze Platzhalter in `docker-compose.lb.yml` und `nginx-lb.conf`
 cd /opt/docker-setup
