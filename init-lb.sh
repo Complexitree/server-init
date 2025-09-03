@@ -37,7 +37,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # 🔹 2. Abfrage von Domain & Umgebungsvariablen
-read -p "🌍 Unter welcher Domain soll der Server erreichbar sein (mehrere Domains mit Leerzeichen getrennt): " DOMAIN
+read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
 
 echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
 read XTREE_KEY_STORE_ACCESS_GRANT
@@ -160,4 +160,4 @@ else
 fi
 
 
-echo -e "${GREEN}✅ Setup abgeschlossen! Der Complexitree-Server läuft nun unter: http://$DOMAIN ${NC}"
+echo -e "${GREEN}✅ Setup abgeschlossen! Der Complexitree-Server läuft als: $DOMAIN ${NC}"
