@@ -139,11 +139,8 @@ echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
 docker compose up -d
 sleep 10  # Warte auf vollständigen Start
 
-# 🔹 8. Falls automatische Updates aktiviert wurden, Cronjob einrichten
-if [[ "$AUTO_UPDATE" == "y" ]]; then
-    echo -e "${GREEN}📅 Richte tägliche automatische Updates ein...${NC}"
-    
-    cat <<EOF > /opt/docker-setup/update-containers.sh
+# 🔹 8. Update-Skript vorbereiten
+cat <<EOF > /opt/docker-setup/update-containers.sh
 #!/bin/bash
 
 LOG_FILE="/var/log/docker-update.log"
@@ -163,8 +160,12 @@ LOCK_FILE="/tmp/docker-update.lock"
 
 EOF
 
-    # Mach die Datei ausführbar
-    chmod +x /opt/docker-setup/update-containers.sh
+# Mach die Datei ausführbar
+chmod +x /opt/docker-setup/update-containers.sh
+
+# 🔹 9. Falls automatische Updates aktiviert wurden, Cronjob einrichten
+if [[ "$AUTO_UPDATE" == "y" ]]; then
+    echo -e "${GREEN}📅 Richte tägliche automatische Updates ein...${NC}"
 
     # Cronjob sicher hinzufügen
     crontab -l > /tmp/mycron 2>/dev/null || true  # Falls keine Crontab existiert, wird eine neue erstellt
@@ -174,7 +175,7 @@ EOF
 
     echo -e "${GREEN}✅ Automatische Updates sind jetzt aktiv.${NC}"
 else
-    echo -e "${GREEN}❌ Automatische Updates wurden deaktiviert.${NC}"
+    echo -e "${GREEN}❌ Automatische Updates wurden deaktiviert. Du kannst manuell /opt/docker-setup/update-containers.sh ausführen.${NC}"
 fi
 
 
