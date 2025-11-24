@@ -61,11 +61,17 @@ echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_USER_SETTINGS_STORE_BU
 read XTREE_USER_SETTINGS_STORE_BUCKET
 XTREE_USER_SETTINGS_STORE_BUCKET=${XTREE_USER_SETTINGS_STORE_BUCKET:-usersettings}
 
+echo -e "${GREEN}🔑 Bitte geben Sie den Wert für den Table-Data Access Grant ein:${NC}"
+read XTREE_TABLE_DATA_ACCESS_GRANT
+
 echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
 read XTREE_OPENAI_API_KEY
 
 echo -e "${GREEN}🔑 Bitte geben Sie den Docupipe-API-Key für KI-Datenextratkion ein:${NC}"
 read XTREE_DOCUPIPE_API_KEY
+
+echo -e "${GREEN}🔑 Bitte geben Sie den Counter-API-Key ein:${NC}"
+read XTREE_COUNTER_API_KEY
 
 echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
 read ENTERA_CLIENT_ID
@@ -124,8 +130,10 @@ sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CO
 sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_BUCKET_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_BUCKET/g" docker-compose.yml
 sed -i "s/XTREE_USER_SETTINGS_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_USER_SETTINGS_STORE_ACCESS_GRANT/g" docker-compose.yml
 sed -i "s/XTREE_USER_SETTINGS_STORE_BUCKET_PLACEHOLDER/$XTREE_USER_SETTINGS_STORE_BUCKET/g" docker-compose.yml
+sed -i "s/XTREE_TABLE_DATA_ACCESS_GRANT_PLACEHOLDER/$XTREE_TABLE_DATA_ACCESS_GRANT/g" docker-compose.yml
 sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.yml
 sed -i "s/XTREE_DOCUPIPE_API_KEY_PLACEHOLDER/$XTREE_DOCUPIPE_API_KEY/g" docker-compose.yml
+sed -i "s/XTREE_COUNTER_API_KEY_PLACEHOLDER/$XTREE_COUNTER_API_KEY/g" docker-compose.yml
 sed -i "s/ENTERA_CLIENT_ID_PLACEHOLDER/$ENTERA_CLIENT_ID/g" docker-compose.yml
 sed -i "s/ENTERA_CLIENT_SECRET_PLACEHOLDER/$ENTERA_CLIENT_SECRET/g" docker-compose.yml
 
