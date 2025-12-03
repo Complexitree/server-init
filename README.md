@@ -18,6 +18,48 @@ chmod +x init-lb.sh
 sudo ./init-lb.sh
 ```
 
+## Configuration via Init-URL
+
+Both init scripts support automated configuration via an init-url. Instead of entering parameters manually, you can provide a URL to a configuration file containing all required parameters.
+
+### Using Init-URL
+
+When running the init script, you will be asked:
+
+```
+📋 Möchten Sie eine Init-URL mit allen Konfigurationsparametern angeben? (y/n):
+```
+
+If you answer `y`, you can provide a URL to your configuration file. The script will download and parse it automatically.
+
+### Configuration File Format
+
+The configuration file must follow this format:
+- One parameter per line
+- Format: `KEY:VALUE`
+- Lines starting with `#` are comments and will be ignored
+- Empty lines will be ignored
+
+See `config-sample.txt` in this repository for a complete template with all available parameters.
+
+### Example Configuration File
+
+```
+# Complexitree Server Configuration
+DOMAIN:example.com www.example.com
+EMAIL:admin@example.com
+XTREE_KEY_STORE_ACCESS_GRANT:your_access_grant_here
+XTREE_KEY_STORE_BUCKET:keys
+AUTO_UPDATE:y
+```
+
+### Required Parameters
+
+- **For init.sh**: DOMAIN, EMAIL, and all XTREE_* parameters
+- **For init-lb.sh**: DOMAIN and all XTREE_* parameters (EMAIL not needed)
+
+If the init-url is not provided or fails to load, the script will fall back to interactive parameter entry.
+
 ## Updating the server
 
 If selected in the setup the server updates the docker containers automatically. You may see update-information with this command:
