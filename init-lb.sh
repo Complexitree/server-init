@@ -37,53 +37,133 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # 🔹 2. Abfrage von Domain & Umgebungsvariablen
-read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
+# Function to parse config from URL
+parse_config_from_url() {
+    local config_url=$1
+    local temp_config="/tmp/init-config-$$.txt"
+    
+    echo -e "${GREEN}📥 Lade Konfiguration von $config_url...${NC}"
+    
+    if wget -q -O "$temp_config" "$config_url"; then
+        echo -e "${GREEN}✅ Konfiguration erfolgreich geladen${NC}"
+        
+        # Parse config file
+        while IFS=: read -r key value || [ -n "$key" ]; do
+            # Skip empty lines and comments
+            [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+            
+            # Trim whitespace
+            key=$(echo "$key" | xargs)
+            value=$(echo "$value" | xargs)
+            
+            # Skip if key or value is empty
+            [[ -z "$key" || -z "$value" ]] && continue
+            
+            # Export the variable
+            case "$key" in
+                DOMAIN) DOMAIN="$value" ;;
+                XTREE_KEY_STORE_ACCESS_GRANT) XTREE_KEY_STORE_ACCESS_GRANT="$value" ;;
+                XTREE_KEY_STORE_BUCKET) XTREE_KEY_STORE_BUCKET="$value" ;;
+                XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT) XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT="$value" ;;
+                XTREE_PUBLISH_CONTEXT_STORE_BUCKET) XTREE_PUBLISH_CONTEXT_STORE_BUCKET="$value" ;;
+                XTREE_USER_SETTINGS_STORE_ACCESS_GRANT) XTREE_USER_SETTINGS_STORE_ACCESS_GRANT="$value" ;;
+                XTREE_USER_SETTINGS_STORE_BUCKET) XTREE_USER_SETTINGS_STORE_BUCKET="$value" ;;
+                XTREE_TABLE_DATA_ACCESS_GRANT) XTREE_TABLE_DATA_ACCESS_GRANT="$value" ;;
+                XTREE_OPENAI_API_KEY) XTREE_OPENAI_API_KEY="$value" ;;
+                XTREE_DOCUPIPE_API_KEY) XTREE_DOCUPIPE_API_KEY="$value" ;;
+                XTREE_COUNTER_API_KEY) XTREE_COUNTER_API_KEY="$value" ;;
+                ENTERA_CLIENT_ID) ENTERA_CLIENT_ID="$value" ;;
+                ENTERA_CLIENT_SECRET) ENTERA_CLIENT_SECRET="$value" ;;
+                XTREE_TEMP_ACCESSGRANT) XTREE_TEMP_ACCESSGRANT="$value" ;;
+                XTREE_TEMP_KEYHASH) XTREE_TEMP_KEYHASH="$value" ;;
+                AUTO_UPDATE) AUTO_UPDATE="$value" ;;
+            esac
+        done < "$temp_config"
+        
+        rm -f "$temp_config"
+        return 0
+    else
+        echo -e "❌ Fehler beim Herunterladen der Konfiguration von $config_url"
+        rm -f "$temp_config"
+        return 1
+    fi
+}
 
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
-read XTREE_KEY_STORE_ACCESS_GRANT
+# Ask if user wants to provide init-url
+read -p "📋 Möchten Sie eine Init-URL mit allen Konfigurationsparametern angeben? (y/n): " USE_INIT_URL
 
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_BUCKET ein (Standard: keys):${NC}"
-read XTREE_KEY_STORE_BUCKET
+if [[ "$USE_INIT_URL" == "y" || "$USE_INIT_URL" == "Y" ]]; then
+    read -p "🔗 Bitte geben Sie die Init-URL ein: " INIT_URL
+    
+    if parse_config_from_url "$INIT_URL"; then
+        echo -e "${GREEN}✅ Konfiguration aus URL geladen${NC}"
+        CONFIG_FROM_URL=true
+    else
+        echo -e "⚠️  Fehler beim Laden der Konfiguration. Fahre mit manueller Eingabe fort..."
+        CONFIG_FROM_URL=false
+    fi
+else
+    CONFIG_FROM_URL=false
+fi
+
+# If config was not loaded from URL, ask for parameters interactively
+if [[ "$CONFIG_FROM_URL" != true ]]; then
+    read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
+    read XTREE_KEY_STORE_ACCESS_GRANT
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
+    read XTREE_KEY_STORE_ACCESS_GRANT
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_BUCKET ein (Standard: keys):${NC}"
+    read XTREE_KEY_STORE_BUCKET
+    XTREE_KEY_STORE_BUCKET=${XTREE_KEY_STORE_BUCKET:-keys}
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT ein:${NC}"
+    read XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_BUCKET ein (Standard: publishcontext):${NC}"
+    read XTREE_PUBLISH_CONTEXT_STORE_BUCKET
+    XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publishcontext}
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_USER_SETTINGS_STORE_ACCESS_GRANT ein:${NC}"
+    read XTREE_USER_SETTINGS_STORE_ACCESS_GRANT
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_USER_SETTINGS_STORE_BUCKET ein (Standard: usersettings):${NC}"
+    read XTREE_USER_SETTINGS_STORE_BUCKET
+    XTREE_USER_SETTINGS_STORE_BUCKET=${XTREE_USER_SETTINGS_STORE_BUCKET:-usersettings}
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für den Table-Data Access Grant ein:${NC}"
+    read XTREE_TABLE_DATA_ACCESS_GRANT
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
+    read XTREE_OPENAI_API_KEY
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Docupipe-API-Key für KI-Datenextraktion ein:${NC}"
+    read XTREE_DOCUPIPE_API_KEY
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Counter-API-Key ein:${NC}"
+    read XTREE_COUNTER_API_KEY
+
+    echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
+    read ENTERA_CLIENT_ID
+
+    echo -e "${GREEN}🔑 Bitte geben Sie das Entera Client-Secret ein:${NC}"
+    read ENTERA_CLIENT_SECRET
+
+    echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_ACCESSGRANT:${NC}"
+    read XTREE_TEMP_ACCESSGRANT
+    echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
+    read XTREE_TEMP_KEYHASH
+
+    read -p "🔄 Sollen die Docker-Container automatisch täglich aktualisiert werden? (y/n): " AUTO_UPDATE
+fi
+
+# Apply defaults for bucket names if not set
 XTREE_KEY_STORE_BUCKET=${XTREE_KEY_STORE_BUCKET:-keys}
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT ein:${NC}"
-read XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_PUBLISH_CONTEXT_STORE_BUCKET ein (Standard: publishcontext):${NC}"
-read XTREE_PUBLISH_CONTEXT_STORE_BUCKET
 XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publishcontext}
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_USER_SETTINGS_STORE_ACCESS_GRANT ein:${NC}"
-read XTREE_USER_SETTINGS_STORE_ACCESS_GRANT
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_USER_SETTINGS_STORE_BUCKET ein (Standard: usersettings):${NC}"
-read XTREE_USER_SETTINGS_STORE_BUCKET
 XTREE_USER_SETTINGS_STORE_BUCKET=${XTREE_USER_SETTINGS_STORE_BUCKET:-usersettings}
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Wert für den Table-Data Access Grant ein:${NC}"
-read XTREE_TABLE_DATA_ACCESS_GRANT
-
-echo -e "${GREEN}🔑 Bitte geben Sie den OpenAI-API-Key für KI-Funktionen ein:${NC}"
-read XTREE_OPENAI_API_KEY
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Docupipe-API-Key für KI-Datenextraktion ein:${NC}"
-read XTREE_DOCUPIPE_API_KEY
-
-echo -e "${GREEN}🔑 Bitte geben Sie den Counter-API-Key ein:${NC}"
-read XTREE_COUNTER_API_KEY
-
-echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
-read ENTERA_CLIENT_ID
-
-echo -e "${GREEN}🔑 Bitte geben Sie das Entera Client-Secret ein:${NC}"
-read ENTERA_CLIENT_SECRET
-
-echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_ACCESSGRANT:${NC}"
-read XTREE_TEMP_ACCESSGRANT
-echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
-read XTREE_TEMP_KEYHASH
-
-read -p "🔄 Sollen die Docker-Container automatisch täglich aktualisiert werden? (y/n): " AUTO_UPDATE
 
 # 🔹 3. Installiere Docker
 echo -e "${GREEN}📦 Installiere Docker und Docker Compose...${NC}"

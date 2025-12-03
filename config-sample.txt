@@ -1,0 +1,51 @@
+# Complexitree Server Configuration Template
+# 
+# This file contains all configuration parameters needed for server initialization.
+# Format: KEY:VALUE (one per line)
+# Lines starting with # are comments and will be ignored
+# Empty lines will be ignored
+#
+# To use this file:
+# 1. Copy this template and fill in your values
+# 2. Host the file on a web server (e.g., https://example.com/config.txt)
+# 3. Run the init script and provide the URL when prompted
+#
+# Note: For init.sh, you need DOMAIN and EMAIL
+#       For init-lb.sh, you only need DOMAIN (no EMAIL needed)
+
+# Domain configuration
+# For init.sh: Multiple domains separated by spaces (e.g., "example.com www.example.com")
+# For init-lb.sh: Server instance name
+DOMAIN:example.com
+
+# Email for Let's Encrypt (only needed for init.sh)
+EMAIL:admin@example.com
+
+# Storage access grants and buckets
+XTREE_KEY_STORE_ACCESS_GRANT:your_key_store_access_grant_here
+XTREE_KEY_STORE_BUCKET:keys
+
+XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT:your_publish_context_access_grant_here
+XTREE_PUBLISH_CONTEXT_STORE_BUCKET:publishcontext
+
+XTREE_USER_SETTINGS_STORE_ACCESS_GRANT:your_user_settings_access_grant_here
+XTREE_USER_SETTINGS_STORE_BUCKET:usersettings
+
+# Table data access
+XTREE_TABLE_DATA_ACCESS_GRANT:your_table_data_access_grant_here
+
+# API Keys
+XTREE_OPENAI_API_KEY:your_openai_api_key_here
+XTREE_DOCUPIPE_API_KEY:your_docupipe_api_key_here
+XTREE_COUNTER_API_KEY:your_counter_api_key_here
+
+# Entera configuration
+ENTERA_CLIENT_ID:your_entera_client_id_here
+ENTERA_CLIENT_SECRET:your_entera_client_secret_here
+
+# Temporary values
+XTREE_TEMP_ACCESSGRANT:your_temp_accessgrant_here
+XTREE_TEMP_KEYHASH:your_temp_keyhash_here
+
+# Auto-update configuration (y or n)
+AUTO_UPDATE:y
