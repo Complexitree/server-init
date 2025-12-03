@@ -42,10 +42,36 @@ parse_config_from_url() {
     local config_url=$1
     local temp_config="/tmp/init-config-$$.txt"
     
+    # Validate URL format (only allow http/https protocols)
+    if [[ ! "$config_url" =~ ^https?:// ]]; then
+        echo -e "❌ Ungültige URL. Nur HTTP und HTTPS URLs sind erlaubt."
+        return 1
+    fi
+    
     echo -e "${GREEN}📥 Lade Konfiguration von $config_url...${NC}"
     
     if wget -q -O "$temp_config" "$config_url"; then
         echo -e "${GREEN}✅ Konfiguration erfolgreich geladen${NC}"
+        
+        # Define allowed configuration keys (whitelist)
+        local allowed_keys=(
+            "DOMAIN"
+            "XTREE_KEY_STORE_ACCESS_GRANT"
+            "XTREE_KEY_STORE_BUCKET"
+            "XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT"
+            "XTREE_PUBLISH_CONTEXT_STORE_BUCKET"
+            "XTREE_USER_SETTINGS_STORE_ACCESS_GRANT"
+            "XTREE_USER_SETTINGS_STORE_BUCKET"
+            "XTREE_TABLE_DATA_ACCESS_GRANT"
+            "XTREE_OPENAI_API_KEY"
+            "XTREE_DOCUPIPE_API_KEY"
+            "XTREE_COUNTER_API_KEY"
+            "ENTERA_CLIENT_ID"
+            "ENTERA_CLIENT_SECRET"
+            "XTREE_TEMP_ACCESSGRANT"
+            "XTREE_TEMP_KEYHASH"
+            "AUTO_UPDATE"
+        )
         
         # Parse config file
         while IFS=: read -r key value || [ -n "$key" ]; do
@@ -58,6 +84,20 @@ parse_config_from_url() {
             
             # Skip if key or value is empty
             [[ -z "$key" || -z "$value" ]] && continue
+            
+            # Check if key is in whitelist
+            local key_allowed=false
+            for allowed_key in "${allowed_keys[@]}"; do
+                if [[ "$key" == "$allowed_key" ]]; then
+                    key_allowed=true
+                    break
+                fi
+            done
+            
+            if [[ "$key_allowed" == false ]]; then
+                echo -e "⚠️  Warnung: Unbekannter Konfigurationsparameter '$key' wird ignoriert"
+                continue
+            fi
             
             # Export the variable
             case "$key" in
@@ -109,9 +149,6 @@ fi
 # If config was not loaded from URL, ask for parameters interactively
 if [[ "$CONFIG_FROM_URL" != true ]]; then
     read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
-
-    echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
-    read XTREE_KEY_STORE_ACCESS_GRANT
 
     echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
     read XTREE_KEY_STORE_ACCESS_GRANT
