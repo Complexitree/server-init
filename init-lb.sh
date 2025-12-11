@@ -55,7 +55,6 @@ parse_config_from_url() {
         
         # Define allowed configuration keys (whitelist)
         local allowed_keys=(
-            "DOMAIN"
             "XTREE_KEY_STORE_ACCESS_GRANT"
             "XTREE_KEY_STORE_BUCKET"
             "XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT"
@@ -102,7 +101,6 @@ parse_config_from_url() {
             
             # Export the variable
             case "$key" in
-                DOMAIN) DOMAIN="$value" ;;
                 XTREE_KEY_STORE_ACCESS_GRANT) XTREE_KEY_STORE_ACCESS_GRANT="$value" ;;
                 XTREE_KEY_STORE_BUCKET) XTREE_KEY_STORE_BUCKET="$value" ;;
                 XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT) XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT="$value" ;;
@@ -148,10 +146,11 @@ else
     CONFIG_FROM_URL=false
 fi
 
+# Always ask for DOMAIN from user, even when using config URL
+read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
+
 # If config was not loaded from URL, ask for parameters interactively
 if [[ "$CONFIG_FROM_URL" != true ]]; then
-    read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
-
     echo -e "${GREEN}🔑 Bitte geben Sie den Wert für XTREE_KEY_STORE_ACCESS_GRANT ein:${NC}"
     read XTREE_KEY_STORE_ACCESS_GRANT
 
