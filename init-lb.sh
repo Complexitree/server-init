@@ -129,6 +129,9 @@ parse_config_from_url() {
     fi
 }
 
+# Always ask for DOMAIN from user first
+read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
+
 # Ask if user wants to provide init-url
 read -p "📋 Möchten Sie eine Init-URL mit allen Konfigurationsparametern angeben? (y/n): " USE_INIT_URL
 
@@ -145,9 +148,6 @@ if [[ "$USE_INIT_URL" == "y" || "$USE_INIT_URL" == "Y" ]]; then
 else
     CONFIG_FROM_URL=false
 fi
-
-# Always ask for DOMAIN from user, even when using config URL
-read -p "🌍 Wie soll diese Server-Instanz heißen: " DOMAIN
 
 # If config was not loaded from URL, ask for parameters interactively
 if [[ "$CONFIG_FROM_URL" != true ]]; then
