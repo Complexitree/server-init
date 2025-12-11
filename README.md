@@ -46,8 +46,7 @@ See `config-sample.txt` in this repository for a complete template with all avai
 
 ```
 # Complexitree Server Configuration
-DOMAIN:example.com www.example.com
-EMAIL:admin@example.com
+# Note: DOMAIN and EMAIL are NOT included here - they will be requested interactively
 XTREE_KEY_STORE_ACCESS_GRANT:your_access_grant_here
 XTREE_KEY_STORE_BUCKET:keys
 AUTO_UPDATE:y
@@ -55,8 +54,8 @@ AUTO_UPDATE:y
 
 ### Required Parameters
 
-- **For init.sh**: DOMAIN, EMAIL, and all XTREE_* parameters
-- **For init-lb.sh**: DOMAIN and all XTREE_* parameters (EMAIL not needed)
+- **For init.sh**: All XTREE_* parameters in config file. DOMAIN and EMAIL will be requested interactively.
+- **For init-lb.sh**: All XTREE_* parameters in config file. DOMAIN will be requested interactively.
 
 If the init-url is not provided or fails to load, the script will fall back to interactive parameter entry.
 

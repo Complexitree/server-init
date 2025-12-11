@@ -10,16 +10,12 @@
 # 2. Host the file on a web server (e.g., https://example.com/config.txt)
 # 3. Run the init script and provide the URL when prompted
 #
-# Note: For init.sh, you need DOMAIN and EMAIL
-#       For init-lb.sh, you only need DOMAIN (no EMAIL needed)
+# Note: DOMAIN and EMAIL parameters should NOT be included in this config file.
+#       They will be requested interactively during script execution for security reasons.
+#       For init.sh, you will be prompted for DOMAIN and EMAIL
+#       For init-lb.sh, you will be prompted for DOMAIN only
 
-# Domain configuration
-# For init.sh: Multiple domains separated by spaces (e.g., "example.com www.example.com")
-# For init-lb.sh: Server instance name
-DOMAIN:example.com
-
-# Email for Let's Encrypt (only needed for init.sh)
-EMAIL:admin@example.com
+# The following parameters can be provided via this config file:
 
 # Storage access grants and buckets
 XTREE_KEY_STORE_ACCESS_GRANT:your_key_store_access_grant_here
