@@ -67,6 +67,7 @@ parse_config_from_url() {
             "XTREE_OPENAI_API_KEY"
             "XTREE_DOCUPIPE_API_KEY"
             "XTREE_COUNTER_API_KEY"
+            "CLERK_SECRET_KEY"
             "ENTERA_CLIENT_ID"
             "ENTERA_CLIENT_SECRET"
             "XTREE_TEMP_ACCESSGRANT"
@@ -114,6 +115,7 @@ parse_config_from_url() {
                 XTREE_OPENAI_API_KEY) XTREE_OPENAI_API_KEY="$value" ;;
                 XTREE_DOCUPIPE_API_KEY) XTREE_DOCUPIPE_API_KEY="$value" ;;
                 XTREE_COUNTER_API_KEY) XTREE_COUNTER_API_KEY="$value" ;;
+                CLERK_SECRET_KEY) CLERK_SECRET_KEY="$value" ;;
                 ENTERA_CLIENT_ID) ENTERA_CLIENT_ID="$value" ;;
                 ENTERA_CLIENT_SECRET) ENTERA_CLIENT_SECRET="$value" ;;
                 XTREE_TEMP_ACCESSGRANT) XTREE_TEMP_ACCESSGRANT="$value" ;;
@@ -186,6 +188,9 @@ if [[ "$CONFIG_FROM_URL" != true ]]; then
     echo -e "${GREEN}🔑 Bitte geben Sie den Counter-API-Key ein:${NC}"
     read XTREE_COUNTER_API_KEY
 
+    echo -e "${GREEN}🔑 Bitte geben Sie den Clerk Secret Key ein:${NC}"
+    read CLERK_SECRET_KEY
+
     echo -e "${GREEN}🔑 Bitte geben Sie die Entera Client-ID ein:${NC}"
     read ENTERA_CLIENT_ID
 
@@ -253,6 +258,7 @@ sed -i "s/XTREE_TABLE_DATA_ACCESS_GRANT_PLACEHOLDER/$XTREE_TABLE_DATA_ACCESS_GRA
 sed -i "s/XTREE_OPENAI_API_KEY_PLACEHOLDER/$XTREE_OPENAI_API_KEY/g" docker-compose.yml
 sed -i "s/XTREE_DOCUPIPE_API_KEY_PLACEHOLDER/$XTREE_DOCUPIPE_API_KEY/g" docker-compose.yml
 sed -i "s/XTREE_COUNTER_API_KEY_PLACEHOLDER/$XTREE_COUNTER_API_KEY/g" docker-compose.yml
+sed -i "s/CLERK_SECRET_KEY_PLACEHOLDER/$CLERK_SECRET_KEY/g" docker-compose.yml
 sed -i "s/ENTERA_CLIENT_ID_PLACEHOLDER/$ENTERA_CLIENT_ID/g" docker-compose.yml
 sed -i "s/ENTERA_CLIENT_SECRET_PLACEHOLDER/$ENTERA_CLIENT_SECRET/g" docker-compose.yml
 
