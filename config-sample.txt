@@ -41,6 +41,11 @@ CLERK_PUBLISHABLE_KEY_FOREST:your_clerk_publishable_key_forest_here
 ENTERA_CLIENT_ID:your_entera_client_id_here
 ENTERA_CLIENT_SECRET:your_entera_client_secret_here
 
+# Supabase configuration
+SUPABASE_URL:your_supabase_url_here
+SUPABASE_SERVICE_KEY:your_supabase_service_key_here
+SUPABASE_PUBLISHABLE_KEY:your_supabase_publishable_key_here
+
 # Temporary values
 XTREE_TEMP_ACCESSGRANT:your_temp_accessgrant_here
 XTREE_TEMP_KEYHASH:your_temp_keyhash_here
