@@ -69,6 +69,9 @@ parse_config_from_url() {
             "CLERK_PUBLISHABLE_KEY_FOREST"
             "ENTERA_CLIENT_ID"
             "ENTERA_CLIENT_SECRET"
+            "SUPABASE_URL"
+            "SUPABASE_SERVICE_KEY"
+            "SUPABASE_PUBLISHABLE_KEY"
             "XTREE_TEMP_ACCESSGRANT"
             "XTREE_TEMP_KEYHASH"
             "AUTO_UPDATE"
@@ -116,6 +119,9 @@ parse_config_from_url() {
                 CLERK_PUBLISHABLE_KEY_FOREST) CLERK_PUBLISHABLE_KEY_FOREST="$value" ;;
                 ENTERA_CLIENT_ID) ENTERA_CLIENT_ID="$value" ;;
                 ENTERA_CLIENT_SECRET) ENTERA_CLIENT_SECRET="$value" ;;
+                SUPABASE_URL) SUPABASE_URL="$value" ;;
+                SUPABASE_SERVICE_KEY) SUPABASE_SERVICE_KEY="$value" ;;
+                SUPABASE_PUBLISHABLE_KEY) SUPABASE_PUBLISHABLE_KEY="$value" ;;
                 XTREE_TEMP_ACCESSGRANT) XTREE_TEMP_ACCESSGRANT="$value" ;;
                 XTREE_TEMP_KEYHASH) XTREE_TEMP_KEYHASH="$value" ;;
                 AUTO_UPDATE) AUTO_UPDATE="$value" ;;
@@ -198,6 +204,15 @@ if [[ "$CONFIG_FROM_URL" != true ]]; then
     echo -e "${GREEN}🔑 Bitte geben Sie das Entera Client-Secret ein:${NC}"
     read ENTERA_CLIENT_SECRET
 
+    echo -e "${GREEN}🔑 Bitte geben Sie die Supabase URL ein:${NC}"
+    read SUPABASE_URL
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Supabase Service Key ein:${NC}"
+    read SUPABASE_SERVICE_KEY
+
+    echo -e "${GREEN}🔑 Bitte geben Sie den Supabase Publishable Key ein:${NC}"
+    read SUPABASE_PUBLISHABLE_KEY
+
     echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_ACCESSGRANT:${NC}"
     read XTREE_TEMP_ACCESSGRANT
     echo -e "${GREEN}🔑 Temporär - XTREE_TEMP_KEYHASH:${NC}"
@@ -258,6 +273,9 @@ sed -i "s|ENTERA_CLIENT_ID_PLACEHOLDER|$ENTERA_CLIENT_ID|g" docker-compose.lb.ym
 sed -i "s|ENTERA_CLIENT_SECRET_PLACEHOLDER|$ENTERA_CLIENT_SECRET|g" docker-compose.lb.yml
 sed -i "s|XTREE_TEMP_ACCESSGRANT_PLACEHOLDER|$XTREE_TEMP_ACCESSGRANT|g" docker-compose.lb.yml
 sed -i "s|XTREE_TEMP_KEYHASH_PLACEHOLDER|$XTREE_TEMP_KEYHASH|g" docker-compose.lb.yml
+sed -i "s|SUPABASE_URL_PLACEHOLDER|$SUPABASE_URL|g" docker-compose.lb.yml
+sed -i "s|SUPABASE_SERVICE_KEY_PLACEHOLDER|$SUPABASE_SERVICE_KEY|g" docker-compose.lb.yml
+sed -i "s|SUPABASE_PUBLISHABLE_KEY_PLACEHOLDER|$SUPABASE_PUBLISHABLE_KEY|g" docker-compose.lb.yml
 
 # 🔹 6. Docker-Compose starten
 echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
