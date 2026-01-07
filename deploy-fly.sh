@@ -41,7 +41,13 @@ echo "📱 App name: $APP_NAME"
 echo ""
 
 # Check if app exists on Fly.io
-APP_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$APP_NAME\"" || echo "0")
+# Try to use jq for reliable JSON parsing, fallback to grep if jq is not available
+if command -v jq &> /dev/null; then
+    APP_EXISTS=$(flyctl apps list --json 2>/dev/null | jq -r '.[].Name' | grep -cx "$APP_NAME" || echo "0")
+else
+    APP_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$APP_NAME\"" || echo "0")
+fi
+
 if [ "$APP_EXISTS" -gt 0 ]; then
     echo "✅ App '$APP_NAME' exists on Fly.io"
 else

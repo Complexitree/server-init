@@ -34,7 +34,13 @@ echo "📋 Checking apps..."
 echo ""
 
 # Check if Gotenberg app exists using JSON output for reliability
-GOTENBERG_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$GOTENBERG_APP\"" || echo "0")
+# Try to use jq for reliable JSON parsing, fallback to grep if jq is not available
+if command -v jq &> /dev/null; then
+    GOTENBERG_EXISTS=$(flyctl apps list --json 2>/dev/null | jq -r '.[].Name' | grep -cx "$GOTENBERG_APP" || echo "0")
+else
+    GOTENBERG_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$GOTENBERG_APP\"" || echo "0")
+fi
+
 if [ "$GOTENBERG_EXISTS" -gt 0 ]; then
     echo "✅ Gotenberg app '$GOTENBERG_APP' exists"
     
@@ -46,7 +52,12 @@ if [ "$GOTENBERG_EXISTS" -gt 0 ]; then
     echo ""
     echo "🔍 Checking for public IPs..."
     # Use JSON output for more reliable parsing
-    PUBLIC_IP_COUNT=$(flyctl ips list --app "$GOTENBERG_APP" --json 2>/dev/null | grep -c "\"Address\"" || echo "0")
+    if command -v jq &> /dev/null; then
+        PUBLIC_IP_COUNT=$(flyctl ips list --app "$GOTENBERG_APP" --json 2>/dev/null | jq '. | length' || echo "0")
+    else
+        PUBLIC_IP_COUNT=$(flyctl ips list --app "$GOTENBERG_APP" --json 2>/dev/null | grep -c "\"Address\"" || echo "0")
+    fi
+    
     if [ "$PUBLIC_IP_COUNT" -eq 0 ]; then
         echo "✅ No public IPs (private network only) ✓"
     else
@@ -61,7 +72,12 @@ fi
 
 echo ""
 
-MAIN_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$MAIN_APP\"" || echo "0")
+if command -v jq &> /dev/null; then
+    MAIN_EXISTS=$(flyctl apps list --json 2>/dev/null | jq -r '.[].Name' | grep -cx "$MAIN_APP" || echo "0")
+else
+    MAIN_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$MAIN_APP\"" || echo "0")
+fi
+
 if [ "$MAIN_EXISTS" -gt 0 ]; then
     echo "✅ Main app '$MAIN_APP' exists"
     
