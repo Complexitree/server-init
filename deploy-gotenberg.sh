@@ -31,7 +31,7 @@ echo "✅ Logged in to Fly.io"
 echo ""
 
 # Check if app exists
-APP_NAME=$(grep "^app = " fly-gotenberg.toml | sed 's/app = ["\x27]\?\(.*\)["\x27]\?/\1/')
+APP_NAME=$(grep "^app = " fly-gotenberg.toml | cut -d'"' -f2 | head -1)
 
 if [ -z "$APP_NAME" ]; then
     echo "❌ Error: Could not find app name in fly-gotenberg.toml"
