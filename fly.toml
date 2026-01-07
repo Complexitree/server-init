@@ -17,8 +17,9 @@ kill_timeout = "5s"
 [env]
   # Environment variables - set secrets using: fly secrets set KEY=VALUE
   # Note: Sensitive values should be set as secrets, not in this file
-  # These are placeholders to indicate which variables are needed
-  
+  # PORT is set by Fly.io automatically
+  PORT = "8080"
+
 [experimental]
   # Enable auto_rollback for safer deployments
   auto_rollback = true
@@ -51,9 +52,6 @@ kill_timeout = "5s"
     path = "/version"
     protocol = "http"
     restart_limit = 0
-    
-    [services.http_checks.headers]
-      # Add any required headers for health checks
 
   # TCP checks for additional monitoring
   [[services.tcp_checks]]
