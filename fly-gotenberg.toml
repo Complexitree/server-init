@@ -12,7 +12,7 @@ kill_timeout = "5s"
 
 [build]
   # Use the official Gotenberg Docker image
-  image = "gotenberg/gotenberg:8.15.3"
+  image = "gotenberg/gotenberg:8.25.1"
 
 [experimental]
   # Enable auto_rollback for safer deployments
