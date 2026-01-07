@@ -69,7 +69,21 @@ Fly.io provides a modern cloud platform with built-in auto-scaling, multi-region
    flyctl secrets import < secrets.txt
    ```
 
-4. **Deploy using the deployment script**:
+4. **Deploy Gotenberg service** (optional but recommended):
+   
+   Gotenberg is a document conversion service that runs as a separate private app:
+   ```bash
+   ./deploy-gotenberg.sh
+   ```
+   
+   After deploying Gotenberg, set the URL in your main app:
+   ```bash
+   flyctl secrets set GOTENBERG_URL=http://gotenberg-complexitree.internal:3000 --app complexitree-server
+   ```
+   
+   **Security Note**: Gotenberg runs with no public endpoints and is only accessible via Fly.io's private networking by apps in your organization.
+
+5. **Deploy the main server**:
    ```bash
    ./deploy-fly.sh
    ```
@@ -153,6 +167,48 @@ To adjust resources:
 ```bash
 flyctl scale vm shared-cpu-2x --memory 2048
 ```
+
+### Gotenberg Service (Private Network)
+
+Gotenberg is a document conversion service that runs as a separate private app. It provides PDF generation and document conversion capabilities.
+
+#### Deploying Gotenberg
+
+```bash
+./deploy-gotenberg.sh
+```
+
+#### Connecting to Gotenberg
+
+After deployment, Gotenberg is accessible via Fly.io's private network:
+
+```bash
+# Set the Gotenberg URL in your main app
+flyctl secrets set GOTENBERG_URL=http://gotenberg-complexitree.internal:3000 --app complexitree-server
+```
+
+#### Security
+
+- **No public access**: Gotenberg has no public endpoints
+- **Private networking only**: Only accessible by apps in your Fly.io organization
+- **Internal DNS**: Uses `.internal` domain for private communication
+- **Automatic encryption**: All traffic within Fly.io's private network is encrypted
+
+#### Managing Gotenberg
+
+```bash
+# View Gotenberg status
+flyctl status --app gotenberg-complexitree
+
+# View Gotenberg logs
+flyctl logs --app gotenberg-complexitree
+
+# Scale Gotenberg
+flyctl scale count 0-2 --region fra --app gotenberg-complexitree
+```
+
+Gotenberg is configured with smaller resources (512 MB memory) since it typically handles fewer requests than the main server.
+
 
 ### Custom Domain
 

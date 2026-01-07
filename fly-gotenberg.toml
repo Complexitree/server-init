@@ -1,0 +1,40 @@
+# Fly.io configuration for Gotenberg Service
+# This file manages the Gotenberg service for document conversion
+# This service is private and only accessible via Fly.io private networking
+
+# App name - this will be your Gotenberg app
+app = "gotenberg-complexitree"
+primary_region = "fra" # Frankfurt, Germany
+
+# Automatically stop machines when there's no traffic
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[build]
+  # Use the official Gotenberg Docker image
+  image = "gotenberg/gotenberg:8.15.3"
+
+[experimental]
+  # Enable auto_rollback for safer deployments
+  auto_rollback = true
+
+# Internal HTTP service configuration (no public access)
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  # Concurrency settings for autoscaling
+  [services.concurrency]
+    type = "requests"
+    hard_limit = 100
+    soft_limit = 80
+
+# VM resources configuration
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
