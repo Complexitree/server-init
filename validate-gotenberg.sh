@@ -33,7 +33,9 @@ MAIN_APP="complexitree-server"
 echo "📋 Checking apps..."
 echo ""
 
-if flyctl apps list | grep -q "^$GOTENBERG_APP[[:space:]]"; then
+# Check if Gotenberg app exists using JSON output for reliability
+GOTENBERG_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$GOTENBERG_APP\"" || echo "0")
+if [ "$GOTENBERG_EXISTS" -gt 0 ]; then
     echo "✅ Gotenberg app '$GOTENBERG_APP' exists"
     
     # Check status
@@ -43,12 +45,13 @@ if flyctl apps list | grep -q "^$GOTENBERG_APP[[:space:]]"; then
     
     echo ""
     echo "🔍 Checking for public IPs..."
-    PUBLIC_IPS=$(flyctl ips list --app "$GOTENBERG_APP" 2>/dev/null || echo "")
-    if [ -z "$PUBLIC_IPS" ] || [ "$PUBLIC_IPS" = "No IP addresses found" ]; then
+    # Use JSON output for more reliable parsing
+    PUBLIC_IP_COUNT=$(flyctl ips list --app "$GOTENBERG_APP" --json 2>/dev/null | grep -c "\"Address\"" || echo "0")
+    if [ "$PUBLIC_IP_COUNT" -eq 0 ]; then
         echo "✅ No public IPs (private network only) ✓"
     else
-        echo "⚠️  Warning: Public IPs found:"
-        echo "$PUBLIC_IPS"
+        echo "⚠️  Warning: $PUBLIC_IP_COUNT public IP(s) found"
+        flyctl ips list --app "$GOTENBERG_APP"
         echo "   Gotenberg may be publicly accessible!"
     fi
 else
@@ -58,7 +61,8 @@ fi
 
 echo ""
 
-if flyctl apps list | grep -q "^$MAIN_APP[[:space:]]"; then
+MAIN_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$MAIN_APP\"" || echo "0")
+if [ "$MAIN_EXISTS" -gt 0 ]; then
     echo "✅ Main app '$MAIN_APP' exists"
     
     # Check if GOTENBERG_URL secret is set
@@ -81,7 +85,7 @@ echo "🧪 Testing private network connection..."
 echo "   (This requires the main app to be running)"
 echo ""
 
-if flyctl apps list | grep -q "^$MAIN_APP[[:space:]]"; then
+if [ "$MAIN_EXISTS" -gt 0 ]; then
     # Try to get a running machine
     MAIN_MACHINES=$(flyctl machines list --app "$MAIN_APP" -j 2>/dev/null || echo "[]")
     

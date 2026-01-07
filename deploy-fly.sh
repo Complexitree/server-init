@@ -30,7 +30,7 @@ echo "✅ Logged in to Fly.io"
 echo ""
 
 # Check if app exists
-APP_NAME=$(grep "^app = " fly.toml | sed 's/app = "\(.*\)"/\1/')
+APP_NAME=$(grep "^app = " fly.toml | sed 's/app = ["\x27]\?\(.*\)["\x27]\?/\1/')
 
 if [ -z "$APP_NAME" ]; then
     echo "❌ Error: Could not find app name in fly.toml"
@@ -41,7 +41,8 @@ echo "📱 App name: $APP_NAME"
 echo ""
 
 # Check if app exists on Fly.io
-if flyctl apps list | grep -q "^$APP_NAME[[:space:]]"; then
+APP_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$APP_NAME\"" || echo "0")
+if [ "$APP_EXISTS" -gt 0 ]; then
     echo "✅ App '$APP_NAME' exists on Fly.io"
 else
     echo "⚠️  App '$APP_NAME' does not exist. Creating it now..."
