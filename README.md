@@ -83,6 +83,11 @@ Fly.io provides a modern cloud platform with built-in auto-scaling, multi-region
    
    **Security Note**: Gotenberg runs with no public endpoints and is only accessible via Fly.io's private networking by apps in your organization.
 
+   **Validate Setup**: After deployment, verify the configuration:
+   ```bash
+   ./validate-gotenberg.sh
+   ```
+
 5. **Deploy the main server**:
    ```bash
    ./deploy-fly.sh

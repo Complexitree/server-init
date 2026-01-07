@@ -68,6 +68,20 @@ flyctl ssh console --app complexitree-server
 curl http://gotenberg-complexitree.internal:3000/health
 ```
 
+### 4. Validate Setup
+
+Run the validation script to check your configuration:
+
+```bash
+./validate-gotenberg.sh
+```
+
+This script will:
+- Verify both apps exist
+- Check that Gotenberg has no public IPs
+- Confirm GOTENBERG_URL secret is set
+- Provide instructions for testing connectivity
+
 ## Configuration Files
 
 ### fly-gotenberg.toml

@@ -19,6 +19,7 @@ kill_timeout = "5s"
   auto_rollback = true
 
 # Internal HTTP service configuration (no public access)
+# Note: No [[services.ports]] section = private network only
 [[services]]
   internal_port = 3000
   protocol = "tcp"
@@ -26,6 +27,13 @@ kill_timeout = "5s"
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
+
+  # TCP checks for monitoring (using internal port)
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "10s"
+    grace_period = "30s"
+    restart_limit = 0
 
   # Concurrency settings for autoscaling
   [services.concurrency]
