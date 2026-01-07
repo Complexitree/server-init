@@ -2,6 +2,170 @@
 
 The repository contains the init-script to setup a new Complexitree-Server. Follow the instructions to start.
 
+## Deployment Options
+
+This repository supports two deployment methods:
+
+1. **Fly.io (Recommended)** - Cloud-native deployment with auto-scaling and multi-region support
+2. **Traditional Server** - Manual setup on Linux servers (Hetzner, etc.)
+
+---
+
+## Deploy on Fly.io
+
+Fly.io provides a modern cloud platform with built-in auto-scaling, multi-region deployment, and zero-downtime deployments.
+
+### Prerequisites
+
+1. Install the Fly.io CLI (`flyctl`):
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   ```
+
+2. Sign up and log in:
+   ```bash
+   flyctl auth signup
+   # or if you already have an account
+   flyctl auth login
+   ```
+
+### Quick Start
+
+1. **Clone this repository**:
+   ```bash
+   git clone https://github.com/Complexitree/server-init.git
+   cd server-init
+   ```
+
+2. **Configure your app name** in `fly.toml`:
+   - Edit the `app = "complexitree-server"` line to use your desired app name
+
+3. **Set up secrets**:
+   Create a file called `secrets.txt` with your configuration:
+   ```
+   XTREE_KEY_STORE_ACCESS_GRANT=your_value_here
+   XTREE_KEY_STORE_BUCKET=keys
+   XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT=your_value_here
+   XTREE_PUBLISH_CONTEXT_STORE_BUCKET=publishcontext
+   XTREE_USER_SETTINGS_STORE_ACCESS_GRANT=your_value_here
+   XTREE_USER_SETTINGS_STORE_BUCKET=usersettings
+   XTREE_TABLE_DATA_ACCESS_GRANT=your_value_here
+   XTREE_OPENAI_API_KEY=your_value_here
+   XTREE_DOCUPIPE_API_KEY=your_value_here
+   XTREE_COUNTER_API_KEY=your_value_here
+   CLERK_SECRET_KEY=your_value_here
+   CLERK_PUBLISHABLE_KEY_FOREST=your_value_here
+   XTREE_TEMP_ACCESSGRANT=your_value_here
+   XTREE_TEMP_KEYHASH=your_value_here
+   ENTERA_CLIENT_ID=your_value_here
+   ENTERA_CLIENT_SECRET=your_value_here
+   SUPABASE_URL=your_value_here
+   SUPABASE_SERVICE_KEY=your_value_here
+   SUPABASE_PUBLISHABLE_KEY=your_value_here
+   ```
+
+   Then import the secrets:
+   ```bash
+   flyctl secrets import < secrets.txt
+   ```
+
+4. **Deploy using the deployment script**:
+   ```bash
+   ./deploy-fly.sh
+   ```
+
+   Or deploy manually:
+   ```bash
+   flyctl deploy
+   ```
+
+### Multi-Region Configuration
+
+The `fly.toml` configuration is set up for multi-region deployment:
+
+- **Primary region**: Frankfurt, Germany (`fra`)
+- **Secondary region**: Sydney, Australia (`syd`)
+
+To scale in specific regions:
+```bash
+# Scale in Frankfurt
+flyctl scale count 0-5 --region fra
+
+# Scale in Sydney
+flyctl scale count 0-5 --region syd
+```
+
+### Auto-Scaling
+
+The configuration includes auto-scaling from 0 to 5 machines:
+
+- **Minimum machines**: 0 (scales to zero when idle)
+- **Maximum machines**: 5 per region
+- **Auto-start**: Machines start automatically when requests arrive
+- **Auto-stop**: Machines stop when idle to save costs
+
+To view current scaling:
+```bash
+flyctl status
+flyctl machines list
+```
+
+### Useful Commands
+
+```bash
+# View application status
+flyctl status
+
+# View logs
+flyctl logs
+
+# SSH into a machine
+flyctl ssh console
+
+# View metrics and dashboard
+flyctl dashboard
+
+# List all machines
+flyctl machines list
+
+# Update secrets
+flyctl secrets set KEY=VALUE
+
+# View current secrets (names only, not values)
+flyctl secrets list
+```
+
+### Health Checks
+
+The application includes health checks on the `/version` endpoint:
+- Check interval: 15 seconds
+- Timeout: 10 seconds
+- Grace period: 30 seconds
+
+### Resources
+
+Each machine is configured with:
+- **CPU**: 1 shared CPU
+- **Memory**: 1024 MB
+- **Concurrency**: 200 soft limit, 250 hard limit
+
+To adjust resources:
+```bash
+flyctl scale vm shared-cpu-2x --memory 2048
+```
+
+### Custom Domain
+
+To add a custom domain:
+```bash
+flyctl certs add yourdomain.com
+flyctl certs show yourdomain.com
+```
+
+Then add the DNS records shown in the output.
+
+---
+
 ## Install on a clean linux server
 
 ```bash
