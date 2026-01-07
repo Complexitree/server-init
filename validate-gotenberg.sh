@@ -103,7 +103,7 @@ echo ""
 
 if [ "$MAIN_EXISTS" -gt 0 ]; then
     # Try to get a running machine
-    MAIN_MACHINES=$(flyctl machines list --app "$MAIN_APP" -j 2>/dev/null || echo "[]")
+    MAIN_MACHINES=$(flyctl machines list --app "$MAIN_APP" --json 2>/dev/null || echo "[]")
     
     if [ "$MAIN_MACHINES" != "[]" ] && [ -n "$MAIN_MACHINES" ]; then
         echo "📝 To test the connection manually:"
