@@ -234,6 +234,62 @@ View current usage:
 flyctl dashboard
 ```
 
+## Gotenberg Service (Private Network)
+
+Gotenberg is deployed as a separate private app accessible only via Fly.io private networking.
+
+### Deploy Gotenberg
+
+```bash
+# Deploy Gotenberg service
+./deploy-gotenberg.sh
+```
+
+### Configure Main App to Use Gotenberg
+
+```bash
+# Set Gotenberg URL in complexitree-server
+flyctl secrets set GOTENBERG_URL=http://gotenberg-complexitree.internal:3000 --app complexitree-server
+```
+
+### Manage Gotenberg App
+
+```bash
+# View status
+flyctl status --app gotenberg-complexitree
+
+# View logs
+flyctl logs --app gotenberg-complexitree
+
+# Scale machines (0-2 recommended)
+flyctl scale count 0-2 --region fra --app gotenberg-complexitree
+
+# List machines
+flyctl machines list --app gotenberg-complexitree
+
+# SSH into Gotenberg machine
+flyctl ssh console --app gotenberg-complexitree
+```
+
+### Private Networking
+
+Gotenberg uses Fly.io's private networking:
+- **Internal URL**: `http://gotenberg-complexitree.internal:3000`
+- **No public access**: Only accessible by apps in your organization
+- **Encrypted traffic**: All private network traffic is encrypted
+- **Service discovery**: Uses `.internal` DNS for automatic discovery
+
+### Testing Private Network Connection
+
+From your main app, you can test the connection:
+```bash
+# SSH into main app
+flyctl ssh console --app complexitree-server
+
+# Test connection to Gotenberg
+curl http://gotenberg-complexitree.internal:3000/health
+```
+
 ## Support
 
 - Fly.io Documentation: https://fly.io/docs/

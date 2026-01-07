@@ -30,7 +30,7 @@ echo "✅ Logged in to Fly.io"
 echo ""
 
 # Check if app exists
-APP_NAME=$(grep "^app = " fly.toml | sed 's/app = "\(.*\)"/\1/')
+APP_NAME=$(grep "^app = " fly.toml | cut -d'"' -f2 | head -1)
 
 if [ -z "$APP_NAME" ]; then
     echo "❌ Error: Could not find app name in fly.toml"
@@ -41,7 +41,14 @@ echo "📱 App name: $APP_NAME"
 echo ""
 
 # Check if app exists on Fly.io
-if flyctl apps list | grep -q "^$APP_NAME[[:space:]]"; then
+# Try to use jq for reliable JSON parsing, fallback to grep if jq is not available
+if command -v jq &> /dev/null; then
+    APP_EXISTS=$(flyctl apps list --json 2>/dev/null | jq -r '.[].Name' | grep -cx "$APP_NAME" || echo "0")
+else
+    APP_EXISTS=$(flyctl apps list --json 2>/dev/null | grep -c "\"Name\":\"$APP_NAME\"" || echo "0")
+fi
+
+if [ "$APP_EXISTS" -gt 0 ]; then
     echo "✅ App '$APP_NAME' exists on Fly.io"
 else
     echo "⚠️  App '$APP_NAME' does not exist. Creating it now..."
@@ -72,6 +79,9 @@ echo "  - ENTERA_CLIENT_SECRET"
 echo "  - SUPABASE_URL"
 echo "  - SUPABASE_SERVICE_KEY"
 echo "  - SUPABASE_PUBLISHABLE_KEY"
+echo ""
+echo "Optional secrets (if using Gotenberg):"
+echo "  - GOTENBERG_URL (use: http://gotenberg-complexitree.internal:3000)"
 echo ""
 echo "You can set secrets one by one using:"
 echo "  flyctl secrets set KEY=VALUE"
