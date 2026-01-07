@@ -1,0 +1,11 @@
+.git
+.gitignore
+README.md
+LICENSE
+*.sh
+scripts/
+nginx.conf
+nginx-lb.conf
+docker-compose.yml
+docker-compose.lb.yml
+config-sample.txt

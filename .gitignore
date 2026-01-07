@@ -1,0 +1,25 @@
+# Secrets and sensitive files
+secrets.txt
+*.secret
+*.key
+.env
+.env.*
+
+# Fly.io
+.fly/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
