@@ -3,7 +3,7 @@
 # Fly.io Deployment Script for Complexitree Server
 # This script helps configure and deploy the Complexitree server to Fly.io
 
-set -e
+set -euo pipefail
 
 echo "🚀 Complexitree Server - Fly.io Deployment"
 echo "==========================================="
@@ -41,7 +41,7 @@ echo "📱 App name: $APP_NAME"
 echo ""
 
 # Check if app exists on Fly.io
-if flyctl apps list | grep -q "^$APP_NAME"; then
+if flyctl apps list | grep -q "^$APP_NAME[[:space:]]"; then
     echo "✅ App '$APP_NAME' exists on Fly.io"
 else
     echo "⚠️  App '$APP_NAME' does not exist. Creating it now..."

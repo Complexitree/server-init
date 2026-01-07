@@ -12,6 +12,9 @@ kill_timeout = "5s"
 
 [build]
   # Use the complexitree/server Docker image
+  # IMPORTANT: Using 'latest' tag is convenient for development but not recommended for production
+  # For production, pin to a specific version for better reproducibility:
+  # image = "complexitree/server:v1.2.3"
   image = "complexitree/server:latest"
 
 [env]

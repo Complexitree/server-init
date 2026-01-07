@@ -153,7 +153,12 @@ flyctl deploy
 
 ### Deploy with Specific Image
 ```bash
+# Best practice: Pin to a specific version for production
 flyctl deploy --image complexitree/server:v1.2.3
+
+# Or update fly.toml to pin the version permanently:
+# [build]
+#   image = "complexitree/server:v1.2.3"
 ```
 
 ### Deploy to Specific Region
