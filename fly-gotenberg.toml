@@ -18,15 +18,20 @@ kill_timeout = "5s"
   # Enable auto_rollback for safer deployments
   auto_rollback = true
 
-# Internal HTTP service configuration (no public access)
-# Note: No [[services.ports]] section = private network only
 [[services]]
   internal_port = 3000
-  internal_only = true
+  protocol = "tcp"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
 
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
 
 # VM resources configuration
 [vm]
