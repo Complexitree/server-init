@@ -22,25 +22,11 @@ kill_timeout = "5s"
 # Note: No [[services.ports]] section = private network only
 [[services]]
   internal_port = 3000
-  protocol = "tcp"
+  internal_only = true
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  max_machines_running = 2
-  processes = ["app"]
 
-  # TCP checks for monitoring (using internal port)
-  [[services.tcp_checks]]
-    interval = "15s"
-    timeout = "10s"
-    grace_period = "30s"
-    restart_limit = 0
-
-  # Concurrency settings for autoscaling
-  [services.concurrency]
-    type = "requests"
-    hard_limit = 100
-    soft_limit = 80
 
 # VM resources configuration
 [vm]
