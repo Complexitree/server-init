@@ -15,7 +15,7 @@ kill_timeout = "5s"
   # IMPORTANT: Using 'latest' tag is convenient for development but not recommended for production
   # For production, pin to a specific version for better reproducibility:
   # image = "complexitree/server:v1.2.3"
-  image = "complexitree/server:0.15.26.8"
+  image = "complexitree/server:0.15.27.1"
 
 [env]
   # Environment variables - set secrets using: fly secrets set KEY=VALUE
