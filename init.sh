@@ -227,8 +227,8 @@ XTREE_KEY_STORE_BUCKET=${XTREE_KEY_STORE_BUCKET:-keys}
 XTREE_PUBLISH_CONTEXT_STORE_BUCKET=${XTREE_PUBLISH_CONTEXT_STORE_BUCKET:-publishcontext}
 XTREE_USER_SETTINGS_STORE_BUCKET=${XTREE_USER_SETTINGS_STORE_BUCKET:-usersettings}
 
-# 🔹 3. Installiere Docker & Certbot
-echo -e "${GREEN}📦 Installiere Docker, Docker Compose & Certbot...${NC}"
+# 🔹 3. Installiere Docker
+echo -e "${GREEN}📦 Installiere Docker und Docker Compose...${NC}"
 apt-get update
 apt-get install -y ca-certificates curl gnupg
 
@@ -241,7 +241,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
   https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update
 
-apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin certbot
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Docker-Dienst starten und aktivieren
 systemctl enable --now docker
@@ -257,14 +257,13 @@ else
     git clone https://github.com/Complexitree/server-init.git /opt/docker-setup
 fi
 
-# 🔹 5. Ersetze Platzhalter in `docker-compose.yml` und `init-letsencrypt.sh`
+# 🔹 5. Ersetze Platzhalter in `docker-compose.yml` und `nginx.conf`
 cd /opt/docker-setup
 MAIN_DOMAIN_PLACEHOLDER="$(echo $DOMAIN | awk '{print $1}')"
 echo "MAIN_DOMAIN_PLACEHOLDER is: $MAIN_DOMAIN_PLACEHOLDER"
-sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" scripts/init-letsencrypt.sh
 sed -i "s|MAIN_DOMAIN_PLACEHOLDER|${MAIN_DOMAIN_PLACEHOLDER}|g" nginx.conf
 sed -i "s|DOMAIN_PLACEHOLDER|${DOMAIN}|g" nginx.conf
-sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" scripts/init-letsencrypt.sh
+sed -i "s/EMAIL_PLACEHOLDER/$EMAIL/g" nginx.conf
 sed -i "s/XTREE_KEY_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_KEY_STORE_ACCESS_GRANT/g" docker-compose.yml
 sed -i "s/XTREE_KEY_STORE_BUCKET_PLACEHOLDER/$XTREE_KEY_STORE_BUCKET/g" docker-compose.yml
 sed -i "s/XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT_PLACEHOLDER/$XTREE_PUBLISH_CONTEXT_STORE_ACCESS_GRANT/g" docker-compose.yml
@@ -283,10 +282,8 @@ sed -i "s|SUPABASE_URL_PLACEHOLDER|$SUPABASE_URL|g" docker-compose.yml
 sed -i "s|SUPABASE_SERVICE_KEY_PLACEHOLDER|$SUPABASE_SERVICE_KEY|g" docker-compose.yml
 sed -i "s|SUPABASE_PUBLISHABLE_KEY_PLACEHOLDER|$SUPABASE_PUBLISHABLE_KEY|g" docker-compose.yml
 
-# 🔹 6. SSL-Zertifikat beantragen
-echo -e "${GREEN}🔒 Erstelle Let's Encrypt Zertifikat...${NC}"
-chmod +x scripts/init-letsencrypt.sh
-scripts/init-letsencrypt.sh
+# 🔹 6. SSL-Zertifikat einrichten
+echo -e "${GREEN}🔒 Das Nginx ACME Modul kümmert sich beim ersten Start automatisch um die Zertifikatsverwaltung.${NC}"
 
 # 🔹 7. Docker-Compose starten
 echo -e "${GREEN}🚀 Starte Docker-Container...${NC}"
